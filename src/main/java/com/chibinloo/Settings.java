@@ -1,4 +1,4 @@
-package com.artlu;
+package com.chibinloo;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;

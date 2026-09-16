@@ -1,4 +1,4 @@
-package com.artlu;
+package com.chibinloo;
 
 import javax.swing.*;
 import java.awt.*;

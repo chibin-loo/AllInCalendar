@@ -1,4 +1,4 @@
-package com.artlu;
+package com.chibinloo;
 
 import java.util.LinkedHashMap;
 import java.util.List;

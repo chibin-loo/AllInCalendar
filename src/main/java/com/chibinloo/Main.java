@@ -1,4 +1,4 @@
-package com.artlu;
+package com.chibinloo;
 
 import java.net.URI;
 import java.net.http.HttpClient;

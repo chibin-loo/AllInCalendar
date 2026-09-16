@@ -100,7 +100,7 @@ All data is stored as plain text in the working directory. These are already lis
 ## Project structure
 
 ```
-src/main/java/com/artlu/
+src/main/java/com/chibinloo/
 ├── Window.java          # Entry point: main window, tabs, list view
 ├── Main.java            # Feed import, task storage, free-time finder, scheduler
 ├── CalendarUI.java      # Shared calendar grid, drag handling, context menus

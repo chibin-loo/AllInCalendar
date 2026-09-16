@@ -1,4 +1,4 @@
-package com.artlu;
+package com.chibinloo;
 
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.Calendar;

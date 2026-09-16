@@ -1,4 +1,4 @@
-package com.artlu;
+package com.chibinloo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,10 +6,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DayWindow {
-    static LocalDate currentDay = LocalDate.now();
+public class WeekWindow {
+    static LocalDate weekStart = sundayOf(LocalDate.now());
     static JPanel panel = new JPanel(new BorderLayout());
-    static final int HOUR_HEIGHT = 60;
+    static final int HOUR_HEIGHT = 70;
 
     private static boolean built = false;
     private static List<Event> events = new ArrayList<>();
@@ -32,10 +32,10 @@ public class DayWindow {
     }
 
     private static void chrome() {
-        grid = new CalendarUI.TimeGrid(1, HOUR_HEIGHT);
-        header = new CalendarUI.AllDayHeader(grid, 1);
+        grid = new CalendarUI.TimeGrid(7, HOUR_HEIGHT);
+        header = new CalendarUI.AllDayHeader(grid, 7);
         scroll = new JScrollPane(grid);
-        scroll.setColumnHeaderView(header); // all-day strip, pinned above the grid
+        scroll.setColumnHeaderView(header);
         scroll.setBorder(null);
         scroll.getVerticalScrollBar().setUnitIncrement(16);
 
@@ -43,7 +43,7 @@ public class DayWindow {
         title.setFont(new Font("Segoe UI", Font.BOLD, 18));
 
         sidebar = new CalendarUI.Sidebar(picked -> {
-            currentDay = picked;
+            weekStart = sundayOf(picked);
             scrollPending = true;
             refresh();
         });
@@ -53,37 +53,37 @@ public class DayWindow {
         sidebarToggle.addActionListener(e -> CalendarUI.toggleSidebar(split, sidebar, sidebarToggle));
 
         JPanel left = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        left.add(CalendarUI.nav("◀", () -> jump(currentDay.minusDays(1))));
+        left.add(CalendarUI.nav("◀", () -> jump(weekStart.minusWeeks(1))));
         left.add(CalendarUI.nav("Today", () -> jump(LocalDate.now())));
-        left.add(CalendarUI.nav("▶", () -> jump(currentDay.plusDays(1))));
-        left.add(CalendarUI.nav("+ Task", () -> Window.newTaskAt(currentDay, "")));
-        left.add(CalendarUI.nav("+ Event", () -> Window.newEventOn(currentDay)));
+        left.add(CalendarUI.nav("▶", () -> jump(weekStart.plusWeeks(1))));
+        left.add(CalendarUI.nav("+ Task", () -> Window.newTaskAt(focusDay(), "")));
+        left.add(CalendarUI.nav("+ Event", () -> Window.newEventOn(focusDay())));
 
         JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
         right.add(sidebarToggle);
 
-        JPanel header = new JPanel(new BorderLayout());
-        header.add(left, BorderLayout.WEST);
-        header.add(title, BorderLayout.CENTER);
-        header.add(right, BorderLayout.EAST);
-        header.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10));
+        JPanel bar = new JPanel(new BorderLayout());
+        bar.add(left, BorderLayout.WEST);
+        bar.add(title, BorderLayout.CENTER);
+        bar.add(right, BorderLayout.EAST);
+        bar.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10));
 
-        panel.add(header, BorderLayout.NORTH);
+        panel.add(bar, BorderLayout.NORTH);
         panel.add(split, BorderLayout.CENTER);
     }
 
     private static void jump(LocalDate d) {
-        currentDay = d;
+        weekStart = sundayOf(d);
         scrollPending = true;
         refresh();
     }
 
     private static void refresh() {
-        title.setText(currentDay.getDayOfWeek() + ", " + currentDay);
-        grid.setEvents(currentDay, events);
-        header.setEvents(currentDay, events);
-        sidebar.setMini(currentDay);
-        sidebar.setDeadlines(events, currentDay, currentDay, "Due this day");
+        title.setText(weekStart + "  to  " + weekStart.plusDays(6));
+        grid.setEvents(weekStart, events);
+        header.setEvents(weekStart, events);
+        sidebar.setMini(weekStart);
+        sidebar.setDeadlines(events, weekStart, weekStart.plusDays(6), "Due this week");
         if (scrollPending) {
             scrollPending = false;
             SwingUtilities.invokeLater(
@@ -91,5 +91,18 @@ public class DayWindow {
         }
         panel.revalidate();
         panel.repaint();
+    }
+
+    static LocalDate sundayOf(LocalDate d) {
+        return d.minusDays(d.getDayOfWeek().getValue() % 7);
+    }
+
+    // Which day the + buttons should target. The week view shows seven days, so
+    // "add" is ambiguous: pick today when today is on screen, otherwise the
+    // Sunday of whatever week you've navigated to.
+    private static LocalDate focusDay() {
+        LocalDate today = LocalDate.now();
+        boolean onScreen = !today.isBefore(weekStart) && !today.isAfter(weekStart.plusDays(6));
+        return onScreen ? today : weekStart;
     }
 }

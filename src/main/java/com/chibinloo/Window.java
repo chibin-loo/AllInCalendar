@@ -1,4 +1,4 @@
-package com.artlu;
+package com.chibinloo;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -13,7 +13,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 
-import com.artlu.Main.WorkBlock;
+import com.chibinloo.Main.WorkBlock;
 
 import javax.swing.JButton;
 import javax.swing.BorderFactory;

@@ -1,4 +1,4 @@
-package com.artlu;
+package com.chibinloo;
 
 /**
  * Guesses whether something you typed is an event (it happens at a time) or a

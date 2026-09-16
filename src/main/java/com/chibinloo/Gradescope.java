@@ -1,4 +1,4 @@
-package com.artlu;
+package com.chibinloo;
 
 import java.util.List;
 import java.util.Map;

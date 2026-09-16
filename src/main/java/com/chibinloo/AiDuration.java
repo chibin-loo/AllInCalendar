@@ -1,4 +1,4 @@
-package com.artlu;
+package com.chibinloo;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
